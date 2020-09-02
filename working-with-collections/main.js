@@ -52,30 +52,25 @@ function shuffleCards(cards) {
 }
 
 function distributeCards(players, cards, numOfCards) {
-  const takenIndexes = [];
+  let startIndex = 0;
   for (let i = 0; i < players.length; i++) {
     for (let j = 0; j < numOfCards; j++) {
-      let randomIndex = Math.floor(Math.random() * cards.length);
-
-      while (takenIndexes.includes(randomIndex)) {
-        randomIndex = Math.floor(Math.random() * cards.length);
-      }
-
-      takenIndexes.push(randomIndex);
-      players[i].hand.push(cards[randomIndex]);
+      players[i].hand.push(cards[startIndex]);
+      startIndex++;
     }
   }
 }
 
 function getWinner(players) {
   const scoreBoard = { A: 11, J: 10, Q: 10, K: 10 };
+  const special = Object.keys(scoreBoard);
   let currWinnerScore = 0;
   let currWinner = null;
   let tie = [];
   for (let i = 0; i < players.length; i++) {
     let score = 0;
     for (let j = 0; j < players[i].hand.length; j++) {
-      if (Object.keys(scoreBoard).includes(players[i].hand[j].rank)) {
+      if (special.includes(players[i].hand[j].rank)) {
         score += Number(scoreBoard[players[i].hand[j].rank]);
       } else score += Number(players[i].hand[j].rank);
     }
