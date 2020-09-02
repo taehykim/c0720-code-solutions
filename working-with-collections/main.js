@@ -57,7 +57,9 @@ function distributeCards(players, cards, numOfCards) {
     for (let j = 0; j < numOfCards; j++) {
       let randomIndex = Math.floor(Math.random() * cards.length);
 
-      while (takenIndexes.includes(randomIndex)) { randomIndex = Math.floor(Math.random() * cards.length); }
+      while (takenIndexes.includes(randomIndex)) {
+        randomIndex = Math.floor(Math.random() * cards.length);
+      }
 
       takenIndexes.push(randomIndex);
       players[i].hand.push(cards[randomIndex]);
@@ -73,10 +75,11 @@ function getWinner(players) {
   for (let i = 0; i < players.length; i++) {
     let score = 0;
     for (let j = 0; j < players[i].hand.length; j++) {
-      if (Object.keys(scoreBoard).includes(players[i].hand[j].rank)) { score += Number(scoreBoard[players[i].hand[j].rank]); } else score += Number(players[i].hand[j].rank);
+      if (Object.keys(scoreBoard).includes(players[i].hand[j].rank)) {
+        score += Number(scoreBoard[players[i].hand[j].rank]);
+      } else score += Number(players[i].hand[j].rank);
     }
 
-    console.log(score, currWinnerScore);
     if (score >= currWinnerScore) {
       if (score === currWinnerScore) tie.push(currWinner, players[i]);
       currWinnerScore = score;
