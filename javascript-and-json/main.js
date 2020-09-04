@@ -16,5 +16,10 @@ const books = [
 console.log(JSON.stringify(books));
 console.log('type of JSON.stringify(books):', typeof JSON.stringify(books));
 
-console.log(JSON.parse(JSON.stringify(books)));
-console.log('type of JSON.parse():', typeof JSON.parse(JSON.stringify(books)));
+const studentJSON = '{ "id": "0", "name": "Tia Kim" }';
+
+console.log(JSON.parse(studentJSON));
+console.log(
+  'type of JSON.parse(\'{ "id": "0", "name": "Tia Kim" }\'): ',
+  typeof JSON.parse(JSON.stringify(books))
+);
