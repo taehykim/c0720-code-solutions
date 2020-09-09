@@ -8,6 +8,12 @@ const students = [
     name: 'Beeg Yoshi',
     course: 'Meming',
     grade: 9001
+  },
+  {
+    id: 2,
+    name: 'Tia Kim',
+    course: 'CS',
+    grade: 100
   }
 ];
 
