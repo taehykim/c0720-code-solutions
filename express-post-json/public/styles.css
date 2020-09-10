@@ -1,9 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
-table,
-th,
-td {
-  border: 1px solid black;
+#title {
+  justify-content: center;
 }
