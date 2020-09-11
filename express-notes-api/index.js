@@ -68,9 +68,7 @@ app.delete('/api/notes/:id', (req, res, next) => {
       return;
     }
 
-    for (const prop in data.notes) {
-      if (Number(prop) === id) delete data.notes[id];
-    }
+    delete data.notes[id];
 
     fs.writeFile('data.json', JSON.stringify(data, null, 2), err => {
       if (err) {
@@ -103,9 +101,8 @@ app.put('/api/notes/:id', (req, res, next) => {
     return;
   }
 
-  for (const prop in data.notes) {
-    if (Number(prop) === id) data.notes[id].content = req.body.content;
-  }
+  data.notes[id].content = req.body.content;
+
   fs.writeFile('data.json', JSON.stringify(data, null, 2), err => {
     if (err) {
       /* eslint-disable no-console */
