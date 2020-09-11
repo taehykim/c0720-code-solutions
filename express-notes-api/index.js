@@ -23,7 +23,6 @@ app.get('/api/notes/:id', (req, res, next) => {
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
-
   } else {
     if (!data.notes[id]) {
       res.status(404).json({ error: `cannot find note with id ${id}` });
@@ -56,15 +55,13 @@ app.post('/api/notes', (req, res, next) => {
 });
 
 app.delete('/api/notes/:id', (req, res, next) => {
-  const notes = getNotes(data);
   const id = Number(req.params.id);
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
 
   } else {
-    const currIndex = notes.findIndex(elm => elm.id === id);
-    if (currIndex === -1) {
+    if (!data.notes[id]) {
       res.status(404).json({ error: `cannot find note with id ${id}` });
       return;
     }
@@ -84,7 +81,6 @@ app.delete('/api/notes/:id', (req, res, next) => {
 });
 
 app.put('/api/notes/:id', (req, res, next) => {
-  const notes = getNotes(data);
   const id = Number(req.params.id);
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
@@ -96,8 +92,7 @@ app.put('/api/notes/:id', (req, res, next) => {
     return;
   }
 
-  const currIndex = notes.findIndex(elm => elm.id === id);
-  if (currIndex === -1) {
+  if (!data.notes[id]) {
     res.status(500).json({ error: `cannot find note with id ${id}` });
     return;
   }
@@ -111,7 +106,8 @@ app.put('/api/notes/:id', (req, res, next) => {
       res.status(500).json({ error: 'An unexpected error occurred.' });
       return;
     }
-    res.status(200).json(notes[currIndex]);
+    res.status(200).json(data.notes[id]);
+
   });
 });
 
