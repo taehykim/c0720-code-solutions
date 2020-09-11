@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const data = require('./data');
 const app = express();
 
 const getNotes = data => {
@@ -12,99 +13,115 @@ const isValidId = id => {
   return Number.isInteger(id) && id > 0;
 };
 
-fs.readFile('data.json', 'utf8', (err, data) => {
-  if (err) throw err;
-  const notesData = JSON.parse(data);
+app.get('/api/notes', (req, res, next) => {
+  const notes = getNotes(data);
+  res.status(200).json(notes);
 
-  app.get('/api/notes', (req, res, next) => {
-    const notes = getNotes(notesData);
+});
 
-    res.status(200).json(notes);
-  });
+app.get('/api/notes/:id', (req, res, next) => {
+  const notes = getNotes(data);
+  const id = Number(req.params.id);
 
-  app.get('/api/notes/:id', (req, res, next) => {
-    const notes = getNotes(notesData);
-    const id = Number(req.params.id);
+  if (!isValidId(id)) {
+    res.status(400).json({ error: 'id must be a positive integer' });
 
-    if (!isValidId(id)) {
-      res.status(400).json({ error: 'id must be a positive integer' });
-    } else {
-      if (notes.findIndex(elm => elm.id === id) === -1) {
-        return res
-          .status(404)
-          .json({ error: `cannot find note with id ${id}` });
-      }
-      res.json(notes[notes.findIndex(elm => elm.id === id)]);
+  } else {
+    const currIndex = notes.findIndex(elm => elm.id === id);
+    if (currIndex === -1) {
+      return res.status(404).json({ error: `cannot find note with id ${id}` });
     }
+    res.json(notes[currIndex]);
+
+  }
+});
+
+app.use(express.json());
+app.post('/api/notes', (req, res, next) => {
+  if (!req.body.content) {
+    res.status(400).json({ error: 'content is a required field' });
+    return;
+  }
+
+  const newNote = { id: data.nextId, content: req.body.content };
+  data.notes[data.nextId] = newNote;
+  data.nextId++;
+
+  fs.writeFile('data.json', JSON.stringify(data, null, 2), err => {
+    if (err) {
+      /* eslint-disable no-console */
+      console.error(err);
+      res.status(500).json({ error: 'An unexpected error occurred.' });
+      return;
+    }
+    res.status(201).json(newNote);
+
   });
+});
 
-  app.use(express.json());
-  app.post('/api/notes', (req, res, next) => {
-    const notes = getNotes(notesData);
+app.delete('/api/notes/:id', (req, res, next) => {
+  const notes = getNotes(data);
+  const id = Number(req.params.id);
 
-    if (!req.body.content) {
-      res.status(400).json({ error: 'content is a required field' });
+  if (!isValidId(id)) {
+    res.status(400).json({ error: 'id must be a positive integer' });
+
+  } else {
+    const currIndex = notes.findIndex(elm => elm.id === id);
+    if (currIndex === -1) {
+      res.status(404).json({ error: `cannot find note with id ${id}` });
+      return;
     }
 
-    const newNote = { id: notesData.nextId, content: req.body.content };
-    notes.push(newNote);
+    for (const prop in data.notes) {
+      console.log(prop);
+      if (Number(prop) === id) delete data.notes[id];
+    }
 
-    notesData.notes = notes;
-    notesData.nextId++;
-
-    fs.writeFile('data.json', JSON.stringify(notesData, null, 2), err => {
+    fs.writeFile('data.json', JSON.stringify(data, null, 2), err => {
       if (err) {
+        /* eslint-disable no-console */
+        console.error(err);
         res.status(500).json({ error: 'An unexpected error occurred.' });
+        return;
       }
-      res.status(201).json(newNote);
+      res.sendStatus(204);
+
     });
-  });
+  }
+});
 
-  app.delete('/api/notes/:id', (req, res, next) => {
-    const notes = getNotes(notesData);
-    const id = Number(req.params.id);
+app.put('/api/notes/:id', (req, res, next) => {
+  const notes = getNotes(data);
+  const id = Number(req.params.id);
+  if (!isValidId(id)) {
+    res.status(400).json({ error: 'id must be a positive integer' });
+    return;
+  }
 
-    if (!isValidId) {
-      res.status(400).json({ error: 'id must be a positive integer' });
-    } else {
-      const deleteIndex = notes.findIndex(elm => elm.id === id);
-      if (deleteIndex === -1) {
-        return res
-          .status(404)
-          .json({ error: `cannot find note with id ${id}` });
-      }
+  if (!req.body.content) {
+    res.status(400).json({ error: 'content is a required field' });
+    return;
+  }
 
-      notes.splice(deleteIndex, 1);
-      notesData.notes = notes;
-      fs.writeFile('data.json', JSON.stringify(notesData, null, 2), err => {
-        if (err) {
-          res.status(500).json({ error: 'An unexpected error occurred.' });
-        }
-        res.sendStatus(204);
-      });
+  const currIndex = notes.findIndex(elm => elm.id === id);
+  if (currIndex === -1) {
+    res.status(500).json({ error: `cannot find note with id ${id}` });
+    return;
+  }
+
+  for (const prop in data.notes) {
+    if (Number(prop) === id) data.notes[id].content = req.body.content;
+  }
+  fs.writeFile('data.json', JSON.stringify(data, null, 2), err => {
+    if (err) {
+      /* eslint-disable no-console */
+      console.error(err);
+      res.status(500).json({ error: 'An unexpected error occurred.' });
+      return;
     }
-  });
+    res.status(200).json(notes[currIndex]);
 
-  app.put('/api/notes/:id', (req, res, next) => {
-    const notes = getNotes(notesData);
-    const id = Number(req.params.id);
-    if (!isValidId(id)) { res.status(400).json({ error: 'id must be a positive integer' }); }
-
-    if (!req.body.content) { res.status(400).json({ error: 'content is a required field' }); }
-
-    const updateIndex = notes.findIndex(elm => elm.id === id);
-    if (updateIndex === -1) {
-      res.status(500).json({ error: `cannot find note with id ${id}` });
-    }
-
-    notes[updateIndex].content = req.body.content;
-    notesData.notes = notes;
-    fs.writeFile('data.json', JSON.stringify(notesData, null, 2), err => {
-      if (err) {
-        res.status(500).json({ error: 'An unexpected error occurred.' });
-      }
-      res.status(200).json(notes[updateIndex]);
-    });
   });
 });
 
