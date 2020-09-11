@@ -56,10 +56,10 @@ app.post('/api/notes', (req, res, next) => {
 
 app.delete('/api/notes/:id', (req, res, next) => {
   const id = Number(req.params.id);
+  // console.log(id);
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
-
   } else {
     if (!data.notes[id]) {
       res.status(404).json({ error: `cannot find note with id ${id}` });
@@ -107,7 +107,6 @@ app.put('/api/notes/:id', (req, res, next) => {
       return;
     }
     res.status(200).json(data.notes[id]);
-
   });
 });
 
