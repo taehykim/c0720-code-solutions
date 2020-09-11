@@ -16,7 +16,6 @@ const isValidId = id => {
 app.get('/api/notes', (req, res, next) => {
   const notes = getNotes(data);
   res.status(200).json(notes);
-
 });
 
 app.get('/api/notes/:id', (req, res, next) => {
@@ -25,14 +24,12 @@ app.get('/api/notes/:id', (req, res, next) => {
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
-
   } else {
     const currIndex = notes.findIndex(elm => elm.id === id);
     if (currIndex === -1) {
       return res.status(404).json({ error: `cannot find note with id ${id}` });
     }
     res.json(notes[currIndex]);
-
   }
 });
 
@@ -55,7 +52,6 @@ app.post('/api/notes', (req, res, next) => {
       return;
     }
     res.status(201).json(newNote);
-
   });
 });
 
@@ -65,7 +61,6 @@ app.delete('/api/notes/:id', (req, res, next) => {
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
-
   } else {
     const currIndex = notes.findIndex(elm => elm.id === id);
     if (currIndex === -1) {
@@ -74,7 +69,6 @@ app.delete('/api/notes/:id', (req, res, next) => {
     }
 
     for (const prop in data.notes) {
-      console.log(prop);
       if (Number(prop) === id) delete data.notes[id];
     }
 
@@ -86,7 +80,6 @@ app.delete('/api/notes/:id', (req, res, next) => {
         return;
       }
       res.sendStatus(204);
-
     });
   }
 });
@@ -121,7 +114,6 @@ app.put('/api/notes/:id', (req, res, next) => {
       return;
     }
     res.status(200).json(notes[currIndex]);
-
   });
 });
 
