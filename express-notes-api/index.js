@@ -24,6 +24,7 @@ app.get('/api/notes/:id', (req, res, next) => {
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
+
   } else {
     const currIndex = notes.findIndex(elm => elm.id === id);
     if (currIndex === -1) {
@@ -61,6 +62,7 @@ app.delete('/api/notes/:id', (req, res, next) => {
 
   if (!isValidId(id)) {
     res.status(400).json({ error: 'id must be a positive integer' });
+
   } else {
     const currIndex = notes.findIndex(elm => elm.id === id);
     if (currIndex === -1) {
