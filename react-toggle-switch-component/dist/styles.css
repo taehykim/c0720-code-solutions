@@ -1,0 +1,39 @@
+.on-slider {
+  position: relative;
+  width: 70px;
+  height: 34px;
+  background-color: #6bf556;
+  border-radius: 40px;
+  border: 2px solid black;
+}
+
+.off-slider {
+  position: relative;
+  width: 70px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 40px;
+  border: 2px solid black;
+}
+
+.on {
+  position: absolute;
+  cursor: pointer;
+  height: 26px;
+  width: 26px;
+  right: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.off {
+  position: absolute;
+  cursor: pointer;
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+}
