@@ -3,7 +3,7 @@ import React from 'react';
 class HotButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { count: 1, className: null };
+    this.state = { count: 0 };
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -11,27 +11,28 @@ class HotButton extends React.Component {
     this.setState(state => ({
       count: state.count + 1
     }));
-
-    const clickCount = this.state.count;
-
-    if (clickCount >= 18) {
-      this.setState({ className: 'purple' });
-    } else if (clickCount >= 15) {
-      this.setState({ className: 'pink' });
-    } else if (clickCount >= 12) {
-      this.setState({ className: 'red' });
-    } else if (clickCount >= 9) {
-      this.setState({ className: 'orange' });
-    } else if (clickCount >= 6) {
-      this.setState({ className: 'yellow' });
-    } else if (clickCount >= 3) {
-      this.setState({ className: 'green' });
-    }
   }
 
   render() {
+    const clickCount = this.state.count;
+    let className = null;
+
+    if (clickCount >= 18) {
+      className = 'purple';
+    } else if (clickCount >= 15) {
+      className = 'pink';
+    } else if (clickCount >= 12) {
+      className = 'red';
+    } else if (clickCount >= 9) {
+      className = 'orange';
+    } else if (clickCount >= 6) {
+      className = 'yellow';
+    } else if (clickCount >= 3) {
+      className = 'green';
+    }
+
     return (
-      <button onClick={this.handleClick} className={this.state.className}>
+      <button onClick={this.handleClick} className={className}>
         Hot Button
       </button>
     );
