@@ -23,8 +23,10 @@ class Stopwatch extends React.Component {
   }
 
   handleResetBtn() {
-    this.setState({ isOn: false, time: 0 });
-    clearInterval(this.timerID);
+    if (!this.state.isOn) {
+      this.setState({ isOn: false, time: 0 });
+      clearInterval(this.timerID);
+    }
   }
 
   render() {
