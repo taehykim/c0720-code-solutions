@@ -3,7 +3,7 @@ import React from 'react';
 class AppDrawer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isOpen: false, opacity: 1 };
+    this.state = { isOpen: false };
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -29,8 +29,8 @@ class AppDrawer extends React.Component {
         <div className={menuContentsClassName}>
           <ul className="menu-ul">
             <li className="title">Menu</li>
-            <li onClick={this.handleMenuClick}>About</li>
-            <li onClick={this.handleClick}> Get Started</li>
+            <li onClick={this.handleClick}>About</li>
+            <li onClick={this.handleClick}>Get Started</li>
             <li onClick={this.handleClick}>Log In</li>
             <li onClick={this.handleClick}>Sign Up</li>
           </ul>
