@@ -1,0 +1,49 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "task": "Learn to code.",
+      "isCompleted": true
+    },
+    {
+      "id": 3,
+      "task": "Build projects.",
+      "isCompleted": true
+    },
+    {
+      "id": 7,
+      "task": "Get a job.",
+      "isCompleted": true
+    },
+    {
+      "task": "Code",
+      "isCompleted": false,
+      "id": 8
+    },
+    {
+      "task": "Eat",
+      "isCompleted": true,
+      "id": 9
+    },
+    {
+      "task": "Drink",
+      "isCompleted": false,
+      "id": 10
+    },
+    {
+      "task": "water",
+      "isCompleted": true,
+      "id": 11
+    },
+    {
+      "task": "coffee",
+      "isCompleted": false,
+      "id": 12
+    },
+    {
+      "task": "hello",
+      "isCompleted": false,
+      "id": 13
+    }
+  ]
+}
