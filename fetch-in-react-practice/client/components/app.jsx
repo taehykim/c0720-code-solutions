@@ -48,7 +48,11 @@ class App extends React.Component {
 
     fetch('/api/todos', init)
       .then(res => res.json())
-      .then(data => this.getAllTodos())
+      .then(data => {
+        const newTodos = [...this.state.todos];
+        newTodos.push(data);
+        this.setState({ todos: newTodos });
+      })
       .catch(err => console.error('Error:', err));
   }
 
@@ -67,10 +71,12 @@ class App extends React.Component {
     const matchingIndex = this.state.todos.findIndex(
       todo => todo.id === todoId
     );
-    const updatedTodo = Object.assign(this.state.todos[matchingIndex], {
-      isCompleted: true
-    });
-
+    const currentTodo = this.state.todos[matchingIndex];
+    const updatedTodo = {
+      id: currentTodo.id,
+      task: currentTodo.task,
+      isCompleted: !currentTodo.isCompleted
+    };
     const init = {
       method: 'PATCH',
       headers: {
@@ -81,7 +87,11 @@ class App extends React.Component {
 
     fetch(`/api/todos/${todoId}`, init)
       .then(res => res.json())
-      .then(data => this.getAllTodos())
+      .then(data => {
+        const newTodos = [...this.state.todos];
+        newTodos.splice(matchingIndex, 1, data);
+        this.setState({ todos: newTodos });
+      })
       .catch(err => console.error('Error:', err));
   }
 
