@@ -14,12 +14,7 @@ app.get('/api/grades', (req, res) => {
 
   db.query(query)
     .then(result => {
-      const grades = result.rows;
-      if (!grades) {
-        res.status(404).json({ error: 'Cannot find grades' });
-      } else {
-        res.json(grades);
-      }
+      res.json(result.rows);
     })
     .catch(err => {
       console.error(err);
@@ -48,7 +43,7 @@ app.get('/api/grades/:gradeId', (req, res) => {
           .status(404)
           .json({ error: `Cannot find grade with gradeId ${gradeId}` });
       } else {
-        res.status(204).json(grade);
+        res.status(200).json(grade);
       }
     })
     .catch(err => {
@@ -60,10 +55,34 @@ app.get('/api/grades/:gradeId', (req, res) => {
 app.use(express.json());
 
 app.post('/api/grades', (req, res) => {
-  const text = 'insert into grades(name,course,grade) values($1,$2,$3) returning *';
-  const values = [];
+  const text =
+    'insert into grades(name,course,grade) values($1,$2,$3) returning *';
+
+  if (Object.keys(req.body).length !== 3) {
+    res.status(400).json({
+      error: 'You must specify all required fields - name, course and grade'
+    });
+    return;
+  }
+
+  const values = [null, null, null];
   for (const prop in req.body) {
-    values.push(req.body[prop]);
+    if (!req.body[prop]) {
+      res.status(400).json({ error: 'You must enter valid inputs' });
+      return;
+    }
+
+    switch (prop) {
+      case 'name':
+        values[0] = req.body[prop];
+        break;
+      case 'course':
+        values[1] = req.body[prop];
+        break;
+      case 'grade':
+        values[2] = req.body[prop];
+        break;
+    }
   }
 
   db.query(text, values)
@@ -82,10 +101,37 @@ app.put('/api/grades/:gradeId', (req, res) => {
     return res.status(400).json({ error: 'gradeId must be a postive integer' });
   }
 
-  const text = 'update grades set name =($1), course =($2), grade =($3) where "gradeId" =($4)';
-  const values = [];
-  for (const prop in req.body) values.push(req.body[prop]);
-  values.push(gradeId);
+  const text =
+    'update grades set name =($1), course =($2), grade =($3) where "gradeId" =($4)';
+
+  if (Object.keys(req.body).length !== 3) {
+    res.status(400).json({
+      error: 'You must specify all required fields - name, course and grade'
+    });
+    return;
+  }
+
+  const values = [null, null, null];
+  for (const prop in req.body) {
+    if (!req.body[prop]) {
+      res.status(400).json({ error: 'You must enter valid inputs' });
+      return;
+    }
+
+    switch (prop) {
+      case 'name':
+        values[0] = req.body[prop];
+        break;
+      case 'course':
+        values[1] = req.body[prop];
+        break;
+      case 'grade':
+        values[2] = req.body[prop];
+        break;
+    }
+  }
+
+  values[3] = gradeId;
 
   db.query(text, values)
     .then(result => {
